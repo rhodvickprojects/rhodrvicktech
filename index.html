@@ -212,17 +212,14 @@
             overflow: hidden;
         }
 
+        /* Logo shown when an article has no image */
         .rt-card-media::before {
-            content: "RT";
+            content: "";
             position: absolute;
             inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            font-size: 42px;
-            color: rgba(255, 48, 59, .5);
+            background: url('/images/rhodvicklogo.png') center / 84px auto no-repeat;
+            filter: drop-shadow(0 0 12px rgba(255, 48, 59, .6));
+            animation: rtLogoPulse 3s ease-in-out infinite;
         }
 
         .rt-card-media img {
@@ -385,6 +382,120 @@
         .rt-source:hover { border-color: rgba(255, 48, 59, .5); transform: translateY(-3px); }
         .rt-source strong { font-family: 'Orbitron', sans-serif; font-size: 14px; }
         .rt-source div { font-size: 13px; color: var(--rt-red); margin-top: 6px; }
+
+        /* =====================================================
+           NEON LIGHT TRAVELLING AROUND EACH NEWS CARD
+        ===================================================== */
+        @property --rt-angle {
+            syntax: '<angle>';
+            initial-value: 0deg;
+            inherits: false;
+        }
+
+        .rt-card { position: relative; }
+
+        .rt-card::before,
+        .rt-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 16px;
+            padding: 2px;
+            background: conic-gradient(
+                from var(--rt-angle),
+                transparent 0deg,
+                transparent 235deg,
+                var(--c) 300deg,
+                #ffffff 336deg,
+                transparent 360deg
+            );
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask-composite: exclude;
+            pointer-events: none;
+            z-index: 3;
+            animation: rtOrbit 4s linear infinite;
+            animation-play-state: paused;   /* only runs while on screen (see script.js) */
+        }
+
+        /* soft glow copy of the ring */
+        .rt-card::after {
+            padding: 4px;
+            filter: blur(7px);
+            opacity: .8;
+        }
+
+        .rt-card.rt-visible::before,
+        .rt-card.rt-visible::after { animation-play-state: running; }
+
+        /* stagger so cards don't all glow in sync */
+        .rt-card:nth-child(3n+1)::before, .rt-card:nth-child(3n+1)::after { animation-delay: -.6s; }
+        .rt-card:nth-child(3n+2)::before, .rt-card:nth-child(3n+2)::after { animation-delay: -1.9s; }
+        .rt-card:nth-child(3n)::before,   .rt-card:nth-child(3n)::after   { animation-delay: -3.2s; }
+
+        @keyframes rtOrbit { to { --rt-angle: 360deg; } }
+
+        @keyframes rtLogoPulse {
+            0%, 100% { opacity: .45; transform: scale(1); }
+            50%      { opacity: .85; transform: scale(1.07); }
+        }
+
+        /* =====================================================
+           HERO ANIMATIONS
+        ===================================================== */
+        @keyframes rtRise {
+            from { opacity: 0; transform: translateY(22px); }
+            to   { opacity: 1; transform: none; }
+        }
+
+        .rt-hero > * { animation: rtRise .8s cubic-bezier(.2, .7, .2, 1) both; }
+        .rt-hero > :nth-child(2) { animation-delay: .12s; }
+        .rt-hero > :nth-child(3) { animation-delay: .24s; }
+        .rt-hero > :nth-child(4) { animation-delay: .36s; }
+        .rt-hero > :nth-child(5) { animation-delay: .48s; }
+
+        /* neon sign flicker on UNLEASHED */
+        .rt-title .red { animation: rtFlicker 5s infinite; }
+
+        @keyframes rtFlicker {
+            0%, 17%, 22%, 62%, 65%, 100% { opacity: 1; text-shadow: 0 0 26px rgba(255, 48, 59, .8), 0 0 60px rgba(255, 48, 59, .35); }
+            19%, 63.5%                   { opacity: .7; text-shadow: 0 0 6px rgba(255, 48, 59, .4); }
+            20.5%                        { opacity: 1; }
+        }
+
+        /* shimmer sweep across FUTURE */
+        .rt-title .white {
+            background: linear-gradient(100deg, #fff 0%, #fff 40%, #ff9aa0 50%, #fff 60%, #fff 100%);
+            background-size: 250% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: none;
+            animation: rtShine 5s linear infinite;
+        }
+
+        @keyframes rtShine {
+            0%   { background-position: 120% 0; }
+            100% { background-position: -120% 0; }
+        }
+
+        .rt-stat b { animation: rtBreath 3s ease-in-out infinite; }
+        .rt-stat:nth-child(2) b { animation-delay: -1s; }
+        .rt-stat:nth-child(3) b { animation-delay: -2s; }
+
+        @keyframes rtBreath {
+            0%, 100% { filter: brightness(1); }
+            50%      { filter: brightness(1.4); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .rt-card::before, .rt-card::after,
+            .rt-card-media::before,
+            .rt-hero > *,
+            .rt-title .red, .rt-title .white,
+            .rt-stat b { animation: none !important; }
+        }
     </style>
 </head>
 
