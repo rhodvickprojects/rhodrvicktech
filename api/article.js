@@ -138,6 +138,9 @@ module.exports = async function handler(req, res) {
     });
   } catch (error) {
     console.error("article api error:", error && error.message);
-    return res.status(502).json({ error: "Could not load the article" });
+    return res.status(502).json({
+      error: "Could not load the article",
+      detail: String((error && error.message) || error)
+    });
   }
 };
