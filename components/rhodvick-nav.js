@@ -45,22 +45,58 @@ class RhodvickNav extends HTMLElement {
 
                 .logo-section { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
 
+                .logo-section { animation: navIn 0.9s cubic-bezier(.2,.7,.2,1) both; }
+
                 .logo-img {
                     width: 42px;
                     height: 42px;
                     object-fit: contain;
-                    filter: drop-shadow(0 0 8px rgba(255, 48, 59, 0.6));
+                    transition: transform 0.35s ease;
+                    animation: logoGlow 3s ease-in-out infinite, logoFloat 4s ease-in-out infinite;
                 }
+
+                .logo-section:hover .logo-img { transform: rotate(-8deg) scale(1.12); }
 
                 .logo-text {
                     font-family: 'Orbitron', sans-serif;
                     font-size: 1.25rem;
                     font-weight: 800;
-                    color: #fff;
-                    text-shadow: 0 0 12px rgba(255, 48, 59, 0.35);
+                    white-space: nowrap;
                 }
 
-                .logo-text em { font-style: normal; color: #ff303b; }
+                /* light sweeping across RHODVICK */
+                .logo-name {
+                    background: linear-gradient(100deg, #fff 0%, #fff 40%, #ff9aa0 50%, #fff 60%, #fff 100%);
+                    background-size: 250% 100%;
+                    -webkit-background-clip: text;
+                    background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    animation: nameShine 5s linear infinite;
+                }
+
+                /* neon flicker on TECH */
+                .logo-text em {
+                    font-style: normal;
+                    color: #ff303b;
+                    text-shadow: 0 0 12px rgba(255, 48, 59, 0.75);
+                    animation: neonFlicker 6s infinite;
+                }
+
+                @keyframes navIn { from { opacity: 0; transform: translateX(-16px); } to { opacity: 1; transform: none; } }
+                @keyframes logoGlow {
+                    0%, 100% { filter: drop-shadow(0 0 5px rgba(255, 48, 59, 0.45)); }
+                    50%      { filter: drop-shadow(0 0 16px rgba(255, 48, 59, 0.95)); }
+                }
+                @keyframes logoFloat { 0%, 100% { translate: 0 0; } 50% { translate: 0 -3px; } }
+                @keyframes nameShine { 0% { background-position: 120% 0; } 100% { background-position: -120% 0; } }
+                @keyframes neonFlicker {
+                    0%, 18%, 22%, 60%, 63%, 100% { opacity: 1; text-shadow: 0 0 12px rgba(255, 48, 59, 0.8), 0 0 26px rgba(255, 48, 59, 0.4); }
+                    20%, 61.5%                   { opacity: 0.65; text-shadow: none; }
+                }
+
+                @media (prefers-reduced-motion: reduce) {
+                    .logo-section, .logo-img, .logo-name, .logo-text em { animation: none !important; }
+                }
 
                 .nav-links {
                     display: flex;
@@ -160,7 +196,7 @@ class RhodvickNav extends HTMLElement {
                 <div class="nav-inner">
                     <a href="index.html" class="logo-section">
                         <img src="/images/rhodvicklogo.png" alt="RHODVICK TECH" class="logo-img">
-                        <span class="logo-text">RHODVICK <em>TECH</em></span>
+                        <span class="logo-text"><span class="logo-name">RHODVICK</span> <em>TECH</em></span>
                     </a>
 
                     <ul class="nav-links">
