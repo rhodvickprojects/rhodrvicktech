@@ -1,4 +1,3 @@
-
 /* =========================================================
    RHODVICK TECH — LIVE TECHNOLOGY NEWS
    RSS-powered news + internal article pages
@@ -162,6 +161,7 @@ function normalizeArticle(item, feedName) {
     title,
     description: description || "Open the original report for more details.",
     summary: description,
+    content: item.content || "", // NEW: full article HTML from the feed
     source: feedName,
     author: item.author || feedName,
     date: item.pubDate || item.isoDate || "",
@@ -428,6 +428,7 @@ document.addEventListener("click", function (event) {
     source: article.source || article.author || "News Publisher",
     date: formatDate(article.date),
     description: article.description || article.summary || "",
+    content: article.content || "", // NEW: full article HTML
     image: article.image || "",
     url: article.url
   };
