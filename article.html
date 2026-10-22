@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -89,6 +88,19 @@
       white-space: pre-line;
       color: #dce4f2;
       font-size: 17px;
+    }
+
+    /* NEW: full article body */
+    #article-body { color: #dce4f2; font-size: 17px; }
+    #article-body p { margin: 0 0 1.2em; }
+    #article-body img { max-width: 100%; height: auto; border-radius: 10px; margin: 16px 0; }
+    #article-body a { color: var(--blue); overflow-wrap: anywhere; }
+    #article-body h2, #article-body h3 { margin: 1.4em 0 .6em; }
+    #article-body blockquote {
+      border-left: 4px solid var(--blue);
+      margin: 1em 0;
+      padding-left: 16px;
+      color: var(--muted);
     }
 
     .source-box {
@@ -184,6 +196,42 @@
       return element;
     }
 
+    /* NEW: strips dangerous tags/attributes from feed HTML */
+    function buildSafeContent(html) {
+      const doc = new DOMParser().parseFromString(html, "text/html");
+
+      doc.querySelectorAll(
+        "script,style,iframe,object,embed,form,input,button,noscript,svg,link,meta"
+      ).forEach(el => el.remove());
+
+      const allowed = { A: ["href"], IMG: ["src", "alt"] };
+
+      doc.body.querySelectorAll("*").forEach(el => {
+        const keep = allowed[el.tagName] || [];
+        [...el.attributes].forEach(attr => {
+          if (!keep.includes(attr.name)) el.removeAttribute(attr.name);
+        });
+
+        if (el.tagName === "A") {
+          const href = el.getAttribute("href") || "";
+          if (/^https?:\/\//i.test(href)) {
+            el.target = "_blank";
+            el.rel = "noopener noreferrer";
+          } else {
+            el.removeAttribute("href");
+          }
+        }
+
+        if (el.tagName === "IMG") {
+          const src = el.getAttribute("src") || "";
+          if (/^https?:\/\//i.test(src)) el.loading = "lazy";
+          else el.remove();
+        }
+      });
+
+      return doc.body;
+    }
+
     if (!article || !article.title) {
       container.replaceChildren();
 
@@ -244,13 +292,25 @@
 
       addTextElement(panel, "h2", "The Story");
 
-      addTextElement(
-        panel,
-        "div",
-        article.description || article.summary ||
-          "A short summary is not available for this story.",
-        ""
-      ).id = "article-summary";
+      /* NEW: show full content when the feed provides it */
+      const body = document.createElement("div");
+      body.id = "article-body";
+
+      const descLength = (article.description || "").length;
+      const contentText = article.content
+        ? new DOMParser().parseFromString(article.content, "text/html").body.textContent
+        : "";
+
+      if (contentText.trim().length > descLength + 50) {
+        // Full story available from the feed
+        body.append(...buildSafeContent(article.content).childNodes);
+      } else {
+        // Feed only provides a summary
+        body.textContent =
+          article.description || "A short summary is not available for this story.";
+      }
+
+      panel.appendChild(body);
 
       const sourceBox = document.createElement("div");
       sourceBox.className = "source-box";
