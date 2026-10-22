@@ -90,6 +90,18 @@
       font-size: 17px;
     }
 
+    .status-note {
+      color: var(--muted);
+      font-size: 14px;
+      font-style: italic;
+      margin: 14px 0 0;
+      animation: statusPulse 1.6s ease-in-out infinite;
+    }
+
+    .status-note.done { animation: none; }
+
+    @keyframes statusPulse { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
+
     /* NEW: full article body */
     #article-body { color: #dce4f2; font-size: 17px; }
     #article-body p { margin: 0 0 1.2em; }
@@ -232,6 +244,41 @@
       return doc.body;
     }
 
+    /* NEW: asks /api/article for the publisher's full story */
+    async function loadFullArticle(body, statusEl) {
+      try {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 15000);
+
+        const response = await fetch(
+          "/api/article?url=" + encodeURIComponent(article.url),
+          { signal: controller.signal }
+        );
+
+        clearTimeout(timer);
+
+        if (!response.ok) throw new Error("Bad response");
+
+        const data = await response.json();
+        if (!data.content) throw new Error("No content");
+
+        const safe = buildSafeContent(data.content);
+        const text = (safe.textContent || "").trim();
+
+        // Only replace the summary if we really got more than it
+        if (text.length < (article.description || "").length + 50) {
+          throw new Error("Not longer than the summary");
+        }
+
+        body.replaceChildren(...safe.childNodes);
+        statusEl.remove();
+      } catch (error) {
+        statusEl.classList.add("done");
+        statusEl.textContent =
+          "The full story couldn't be loaded here. Use the link below to read it at the source.";
+      }
+    }
+
     if (!article || !article.title) {
       container.replaceChildren();
 
@@ -301,16 +348,27 @@
         ? new DOMParser().parseFromString(article.content, "text/html").body.textContent
         : "";
 
+      let needsFullStory = false;
+
       if (contentText.trim().length > descLength + 50) {
         // Full story available from the feed
         body.append(...buildSafeContent(article.content).childNodes);
       } else {
-        // Feed only provides a summary
+        // Feed only provides a summary: show it now, fetch the rest
         body.textContent =
           article.description || "A short summary is not available for this story.";
+        needsFullStory = true;
       }
 
       panel.appendChild(body);
+
+      if (needsFullStory && article.url) {
+        const status = document.createElement("p");
+        status.className = "status-note";
+        status.textContent = "Loading the full story…";
+        panel.appendChild(status);
+        loadFullArticle(body, status);
+      }
 
       const sourceBox = document.createElement("div");
       sourceBox.className = "source-box";
@@ -319,7 +377,8 @@
       addTextElement(
         sourceBox,
         "p",
-        "This RHODVICK TECH page presents a news summary. Visit the publisher for the original report and any additional details."
+        "Originally published by " + (article.source || "the publisher") +
+        ". Visit their website for the original report, related coverage and any updates."
       );
 
       try {
