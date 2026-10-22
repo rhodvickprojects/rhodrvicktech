@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>RHODVICK TECH - Future Tech News</title>
+
+    <!-- ✅ Local favicon -->
+    <link rel="icon" type="image/png" href="/images/rhodvicklogo.png" />
+
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Feather icons (ONLY ONCE) -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <!-- Tailwind config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        neon: {
+                            cyan: '#00f0ff',
+                            pink: '#ff00a0',
+                            purple: '#b829dd',
+                            lime: '#39ff14',
+                            yellow: '#ffff00'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-black text-white min-h-screen overflow-x-hidden">
+
+    <!-- Navbar Component -->
+    <rhodvick-nav></rhodvick-nav>
+
+
+    <!-- ================================= -->
+    <!-- HERO SECTION -->
+    <!-- ================================= -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+
+        <!-- Glow background -->
+        <div class="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black"></div>
+
+        <div class="relative z-10 text-center px-4 max-w-6xl mx-auto">
+
+            <!-- ✅ FIXED LOGO (LOCAL FILE) -->
+            <div class="mb-8">
+                <img
+                    src="/images/rhodvicklogo.png"
+                    alt="RHODVICK TECH"
+                    class="w-32 h-32 mx-auto rounded-2xl border-2 border-neon-cyan shadow-lg shadow-neon-cyan/50 object-contain"
+                />
+            </div>
+
+            <h1 class="text-5xl md:text-8xl font-black mb-6 tracking-tight">
+                <span class="bg-gradient-to-r from-neon-cyan via-neon-purple to-neon-pink bg-clip-text text-transparent">
+                    RHODVICK
+                </span>
+                <br />
+                <span class="text-white">TECH</span>
+            </h1>
+
+            <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto">
+                Your Portal to the
+                <span class="text-neon-cyan font-semibold">Future</span>.
+                Aggregating tech news from every corner of the digital universe.
+            </p>
+
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="#news"
+                   class="px-8 py-4 border-2 border-neon-cyan text-neon-cyan rounded-lg hover:bg-neon-cyan hover:text-black transition">
+                    Explore News
+                </a>
+
+                <a href="#sources"
+                   class="px-8 py-4 border-2 border-neon-pink text-neon-pink rounded-lg hover:bg-neon-pink hover:text-black transition">
+                    Our Sources
+                </a>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ================================= -->
+    <!-- NEWS SECTION -->
+    <!-- ================================= -->
+    <section id="news" class="py-20 px-4">
+
+        <div class="max-w-7xl mx-auto">
+
+            <!-- Loading -->
+            <div id="news-loading" class="text-center py-20">
+                <div class="inline-block w-16 h-16 border-4 border-neon-cyan border-t-transparent rounded-full animate-spin"></div>
+                <p class="mt-4 text-neon-cyan">Loading latest tech news...</p>
+            </div>
+
+            <!-- Grid -->
+            <div id="news-grid"
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            </div>
+
+            <!-- Load More -->
+            <div class="text-center mt-12">
+                <button id="load-more"
+                    class="px-8 py-4 border-2 border-neon-purple text-neon-purple rounded-lg font-bold hover:bg-neon-purple hover:text-black transition">
+                    Load More News
+                </button>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ================================= -->
+    <!-- SOURCES -->
+    <!-- ================================= -->
+    <section id="sources" class="py-20 px-4 bg-gray-900/30">
+
+        <div class="max-w-7xl mx-auto text-center">
+            <h2 class="text-4xl font-bold mb-12 text-neon-cyan">
+                Our News Sources
+            </h2>
+
+            <div id="sources-grid"
+                class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Footer -->
+    <rhodvick-footer></rhodvick-footer>
+
+
+    <!-- ================================= -->
+    <!-- SCRIPTS -->
+    <!-- ================================= -->
+    <script src="components/rhodvick-nav.js"></script>
+    <script src="components/rhodvick-footer.js"></script>
+    <script src="script.js"></script>
+
+    <script>
+        feather.replace();
+    </script>
+
+</body>
+</html>
