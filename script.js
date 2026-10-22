@@ -39,6 +39,15 @@ let isLoading = false;
 let activeFilter = "all";
 let searchQuery = "";
 
+const cardObserver = "IntersectionObserver" in window
+  ? new IntersectionObserver(
+      entries => entries.forEach(entry =>
+        entry.target.classList.toggle("rt-visible", entry.isIntersecting)
+      ),
+      { rootMargin: "120px" }
+    )
+  : null;
+
 /* =========================================================
    SAFE HELPERS
 ========================================================= */
@@ -453,6 +462,12 @@ function renderNewsPage() {
   grid.innerHTML = html;
 
   if (window.feather) window.feather.replace();
+
+  // Run the neon animation only for cards that are on screen
+  grid.querySelectorAll(".rt-card").forEach(card => {
+    if (cardObserver) cardObserver.observe(card);
+    else card.classList.add("rt-visible");
+  });
 
   if (loadMoreButton) {
     const hasMore = visibleCount < filteredNews.length;
