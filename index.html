@@ -6,10 +6,14 @@
 
     <title>RHODVICK TECH - Future Tech News</title>
 
-    <!-- ✅ Local favicon -->
     <link rel="icon" type="image/png" href="/images/rhodvicklogo.png" />
 
     <link rel="stylesheet" href="style.css" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
     <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -17,7 +21,6 @@
     <!-- Feather icons (ONLY ONCE) -->
     <script src="https://unpkg.com/feather-icons"></script>
 
-    <!-- Tailwind config -->
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -36,58 +39,399 @@
             }
         }
     </script>
+
+    <!-- RHODVICK red theme (placed after style.css so it wins) -->
+    <style>
+        :root {
+            --rt-red: #ff303b;
+            --rt-bg: #05060b;
+            --rt-card: #0f1522;
+            --rt-line: #1d283b;
+            --rt-muted: #8b96ab;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            color: #f4f7ff;
+            background: var(--rt-bg);
+        }
+
+        .rt-page-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background:
+                radial-gradient(60% 40% at 50% 0%, rgba(255, 48, 59, .18), transparent 70%),
+                radial-gradient(50% 40% at 100% 100%, rgba(168, 85, 247, .14), transparent 70%),
+                var(--rt-bg);
+        }
+
+        /* ---------- HERO ---------- */
+        .rt-hero {
+            text-align: center;
+            padding: 130px 16px 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .rt-live-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            border: 1px solid rgba(255, 48, 59, .5);
+            background: rgba(255, 48, 59, .08);
+            color: #ff5a63;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+        }
+
+        .rt-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--rt-red);
+            box-shadow: 0 0 10px var(--rt-red);
+            animation: rtPulse 2s infinite;
+        }
+
+        @keyframes rtPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: .45; transform: scale(1.3); }
+        }
+
+        .rt-title {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: clamp(1.8rem, 7.5vw, 4.5rem);
+            line-height: 1.15;
+            margin: 28px 0 14px;
+            letter-spacing: .02em;
+        }
+
+        .rt-title .white { color: #fff; text-shadow: 0 0 18px rgba(255, 255, 255, .25); }
+
+        .rt-title .red {
+            color: var(--rt-red);
+            text-shadow: 0 0 26px rgba(255, 48, 59, .75);
+        }
+
+        .rt-sub {
+            color: #9aa5bb;
+            font-size: clamp(1rem, 3.4vw, 1.35rem);
+            font-weight: 400;
+            letter-spacing: .04em;
+        }
+
+        /* ---------- STATS ---------- */
+        .rt-stats {
+            display: flex;
+            justify-content: center;
+            gap: clamp(20px, 6vw, 60px);
+            margin: 36px 0 34px;
+            flex-wrap: wrap;
+        }
+
+        .rt-stat b {
+            display: block;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 800;
+            font-size: clamp(1.7rem, 6vw, 2.6rem);
+        }
+
+        .rt-stat small {
+            display: block;
+            color: var(--rt-muted);
+            font-size: 13px;
+            letter-spacing: .04em;
+        }
+
+        .rt-stat .c-red { color: var(--rt-red); text-shadow: 0 0 18px rgba(255, 48, 59, .6); }
+        .rt-stat .c-cyan { color: #22d3ee; text-shadow: 0 0 18px rgba(34, 211, 238, .5); }
+        .rt-stat .c-purple { color: #a855f7; text-shadow: 0 0 18px rgba(168, 85, 247, .5); }
+
+        /* ---------- FILTER PILLS ---------- */
+        .rt-filters {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .rt-filter {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border: 1px solid #263246;
+            background: rgba(255, 255, 255, .02);
+            color: #b8c2d4;
+            border-radius: 999px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .2s ease;
+        }
+
+        .rt-filter svg { width: 16px; height: 16px; }
+
+        .rt-filter:hover { border-color: rgba(255, 48, 59, .6); color: #fff; }
+
+        .rt-filter.active {
+            border-color: var(--rt-red);
+            background: rgba(255, 48, 59, .16);
+            color: #fff;
+            box-shadow: 0 0 18px rgba(255, 48, 59, .2);
+        }
+
+        /* ---------- NEWS CARDS ---------- */
+        .rt-card {
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(180deg, #0f1522, #0b101b);
+            border: 1px solid var(--rt-line);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+        }
+
+        .rt-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 48, 59, .5);
+            box-shadow: 0 10px 30px rgba(255, 48, 59, .12);
+        }
+
+        .rt-card-media {
+            position: relative;
+            height: 190px;
+            background: #0b101b;
+            overflow: hidden;
+        }
+
+        .rt-card-media::before {
+            content: "RT";
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 42px;
+            color: rgba(255, 48, 59, .5);
+        }
+
+        .rt-card-media img {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .rt-card-media::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 45%, #0f1522 100%);
+            pointer-events: none;
+        }
+
+        .rt-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            z-index: 2;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--c);
+            border: 1px solid var(--c);
+            background: rgba(5, 6, 11, .75);
+            backdrop-filter: blur(6px);
+        }
+
+        .rt-card-body {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            padding: 14px 18px 18px;
+        }
+
+        .rt-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--rt-muted);
+        }
+
+        .rt-meta span { display: inline-flex; align-items: center; gap: 6px; }
+        .rt-meta svg, .rt-read svg { width: 13px; height: 13px; }
+
+        .rt-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 16px;
+            line-height: 1.45;
+            color: #fff;
+            margin: 12px 0 8px;
+            overflow-wrap: anywhere;
+        }
+
+        .rt-desc {
+            color: #a9b4c8;
+            font-size: 15px;
+            line-height: 1.55;
+            margin: 0 0 16px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .rt-foot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .rt-read {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--rt-muted);
+        }
+
+        .rt-read-more {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: none;
+            border: 0;
+            color: var(--c);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .rt-read-more svg { width: 16px; height: 16px; transition: transform .2s; }
+        .rt-read-more:hover svg { transform: translateX(4px); }
+
+        .rt-search-info {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            padding: 12px 16px;
+            border: 1px solid var(--rt-line);
+            border-radius: 12px;
+            color: #b8c2d4;
+        }
+
+        .rt-search-info a { color: var(--rt-red); font-weight: 700; text-decoration: none; }
+
+        .rt-empty { grid-column: 1 / -1; color: var(--rt-muted); padding: 20px; text-align: center; }
+
+        /* ---------- LOAD MORE + SOURCES ---------- */
+        .rt-btn {
+            padding: 14px 32px;
+            border: 2px solid var(--rt-red);
+            color: var(--rt-red);
+            background: transparent;
+            border-radius: 10px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: .08em;
+            cursor: pointer;
+            transition: all .25s ease;
+        }
+
+        .rt-btn:hover { background: var(--rt-red); color: #fff; box-shadow: 0 0 22px rgba(255, 48, 59, .4); }
+
+        .rt-section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 800;
+            font-size: clamp(1.5rem, 5vw, 2.2rem);
+            color: #fff;
+            margin-bottom: 36px;
+        }
+
+        .rt-section-title span { color: var(--rt-red); }
+
+        .rt-source {
+            display: block;
+            padding: 16px;
+            background: var(--rt-card);
+            border: 1px solid var(--rt-line);
+            border-radius: 12px;
+            color: #f4f7ff;
+            text-decoration: none;
+            transition: all .25s ease;
+        }
+
+        .rt-source:hover { border-color: rgba(255, 48, 59, .5); transform: translateY(-3px); }
+        .rt-source strong { font-family: 'Orbitron', sans-serif; font-size: 14px; }
+        .rt-source div { font-size: 13px; color: var(--rt-red); margin-top: 6px; }
+    </style>
 </head>
 
-<body class="bg-black text-white min-h-screen overflow-x-hidden">
+<body class="min-h-screen overflow-x-hidden">
+
+    <div class="rt-page-bg"></div>
 
     <!-- Navbar Component -->
     <rhodvick-nav></rhodvick-nav>
 
 
     <!-- ================================= -->
-    <!-- HERO SECTION -->
+    <!-- HERO -->
     <!-- ================================= -->
-    <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section class="rt-hero">
 
-        <!-- Glow background -->
-        <div class="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black"></div>
+        <span class="rt-live-pill"><i class="rt-dot"></i> Live Tech Feed</span>
 
-        <div class="relative z-10 text-center px-4 max-w-6xl mx-auto">
+        <h1 class="rt-title">
+            <span class="white">FUTURE</span>
+            <span class="red">UNLEASHED</span>
+        </h1>
 
-            <!-- ✅ FIXED LOGO (LOCAL FILE) -->
-            <div class="mb-8">
-                <img
-                    src="/images/rhodvicklogo.png"
-                    alt="RHODVICK TECH"
-                    class="w-32 h-32 mx-auto rounded-2xl border-2 border-neon-cyan shadow-lg shadow-neon-cyan/50 object-contain"
-                />
+        <p class="rt-sub">Your portal to the cutting edge of technology</p>
+
+        <div class="rt-stats">
+            <div class="rt-stat">
+                <b id="stat-articles" class="c-red">--</b>
+                <small>Articles Today</small>
             </div>
-
-            <h1 class="text-5xl md:text-8xl font-black mb-6 tracking-tight">
-                <span class="bg-gradient-to-r from-neon-cyan via-neon-purple to-neon-pink bg-clip-text text-transparent">
-                    RHODVICK
-                </span>
-                <br />
-                <span class="text-white">TECH</span>
-            </h1>
-
-            <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto">
-                Your Portal to the
-                <span class="text-neon-cyan font-semibold">Future</span>.
-                Aggregating tech news from every corner of the digital universe.
-            </p>
-
-            <div class="flex flex-wrap justify-center gap-4">
-                <a href="#news"
-                   class="px-8 py-4 border-2 border-neon-cyan text-neon-cyan rounded-lg hover:bg-neon-cyan hover:text-black transition">
-                    Explore News
-                </a>
-
-                <a href="#sources"
-                   class="px-8 py-4 border-2 border-neon-pink text-neon-pink rounded-lg hover:bg-neon-pink hover:text-black transition">
-                    Our Sources
-                </a>
+            <div class="rt-stat">
+                <b id="stat-sources" class="c-cyan">--</b>
+                <small>News Sources</small>
             </div>
+            <div class="rt-stat">
+                <b class="c-purple">24/7</b>
+                <small>Live Updates</small>
+            </div>
+        </div>
+
+        <div class="rt-filters" id="filters">
+            <button class="rt-filter active" data-filter="all">All News</button>
+            <button class="rt-filter" data-filter="AI & ML"><i data-feather="zap"></i> AI &amp; ML</button>
+            <button class="rt-filter" data-filter="Crypto"><i data-feather="dollar-sign"></i> Crypto</button>
+            <button class="rt-filter" data-filter="Gaming"><i data-feather="play-circle"></i> Gaming</button>
+            <button class="rt-filter" data-filter="Hardware"><i data-feather="cpu"></i> Hardware</button>
+            <button class="rt-filter" data-filter="Security"><i data-feather="shield"></i> Security</button>
         </div>
     </section>
 
@@ -95,14 +439,14 @@
     <!-- ================================= -->
     <!-- NEWS SECTION -->
     <!-- ================================= -->
-    <section id="news" class="py-20 px-4">
+    <section id="news" class="py-12 px-4" style="scroll-margin-top: 90px;">
 
         <div class="max-w-7xl mx-auto">
 
             <!-- Loading -->
             <div id="news-loading" class="text-center py-20">
-                <div class="inline-block w-16 h-16 border-4 border-neon-cyan border-t-transparent rounded-full animate-spin"></div>
-                <p class="mt-4 text-neon-cyan">Loading latest tech news...</p>
+                <div class="inline-block w-16 h-16 border-4 border-t-transparent rounded-full animate-spin" style="border-color:#ff303b;border-top-color:transparent;"></div>
+                <p class="mt-4" style="color:#ff5a63;">Loading latest tech news...</p>
             </div>
 
             <!-- Grid -->
@@ -112,10 +456,7 @@
 
             <!-- Load More -->
             <div class="text-center mt-12">
-                <button id="load-more"
-                    class="px-8 py-4 border-2 border-neon-purple text-neon-purple rounded-lg font-bold hover:bg-neon-purple hover:text-black transition">
-                    Load More News
-                </button>
+                <button id="load-more" class="rt-btn">LOAD MORE NEWS</button>
             </div>
         </div>
     </section>
@@ -124,12 +465,10 @@
     <!-- ================================= -->
     <!-- SOURCES -->
     <!-- ================================= -->
-    <section id="sources" class="py-20 px-4 bg-gray-900/30">
+    <section id="sources" class="py-20 px-4" style="background:rgba(255,255,255,.015);">
 
         <div class="max-w-7xl mx-auto text-center">
-            <h2 class="text-4xl font-bold mb-12 text-neon-cyan">
-                Our News Sources
-            </h2>
+            <h2 class="rt-section-title">Our News <span>Sources</span></h2>
 
             <div id="sources-grid"
                 class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
