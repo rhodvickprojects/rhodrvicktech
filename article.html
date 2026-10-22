@@ -1,0 +1,289 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Article | RHODVICK TECH</title>
+  <meta name="description" content="Read the latest technology news on RHODVICK TECH.">
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    :root {
+      --red: #ff303b;
+      --blue: #168bff;
+      --dark: #080b12;
+      --panel: #111724;
+      --text: #f4f7ff;
+      --muted: #a5afc2;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--dark);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+      line-height: 1.75;
+    }
+
+    .article-wrap {
+      width: min(900px, 92%);
+      margin: 35px auto 70px;
+    }
+
+    .back-link {
+      display: inline-block;
+      color: var(--blue);
+      text-decoration: none;
+      font-weight: bold;
+      margin-bottom: 25px;
+    }
+
+    .article-label {
+      color: var(--red);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    #article-title {
+      font-size: clamp(30px, 6vw, 52px);
+      line-height: 1.2;
+      margin: 14px 0;
+      overflow-wrap: anywhere;
+    }
+
+    .article-meta {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 25px;
+    }
+
+    #article-image {
+      display: none;
+      width: 100%;
+      max-height: 480px;
+      object-fit: cover;
+      border-radius: 14px;
+      margin: 20px 0 30px;
+    }
+
+    .article-panel {
+      background: var(--panel);
+      border: 1px solid #263246;
+      border-radius: 14px;
+      padding: clamp(20px, 5vw, 38px);
+    }
+
+    .article-panel h2 {
+      font-size: 23px;
+      margin-top: 0;
+    }
+
+    #article-summary {
+      white-space: pre-line;
+      color: #dce4f2;
+      font-size: 17px;
+    }
+
+    .source-box {
+      margin-top: 28px;
+      padding: 20px;
+      border-left: 4px solid var(--red);
+      background: #0b111d;
+      border-radius: 6px;
+    }
+
+    .source-box a {
+      color: var(--blue);
+      overflow-wrap: anywhere;
+    }
+
+    .brand-note {
+      margin-top: 35px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .brand-note strong {
+      color: var(--text);
+      letter-spacing: 2px;
+    }
+
+    .brand-note span { color: var(--red); }
+
+    .error-message {
+      padding: 24px;
+      border: 1px solid #263246;
+      border-radius: 12px;
+      background: var(--panel);
+    }
+
+    .error-message a { color: var(--blue); }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      padding: 25px 15px;
+      border-top: 1px solid #263246;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+  <rhodvick-nav></rhodvick-nav>
+
+  <main class="article-wrap">
+    <a class="back-link" href="index.html#news">← Back to Latest News</a>
+
+    <div id="article-content">
+      <p>Loading article...</p>
+    </div>
+
+    <div class="brand-note">
+      <strong>RHODVICK <span>TECH</span></strong>
+      <p>Technology moves fast. Stay informed. Stay connected.</p>
+    </div>
+  </main>
+
+  <footer>
+    © <span id="year"></span> RHODVICK TECH. All rights reserved.
+  </footer>
+
+  <rhodvick-footer></rhodvick-footer>
+
+  <script src="components/rhodvick-nav.js"></script>
+  <script src="components/rhodvick-footer.js"></script>
+
+  <script>
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+
+    const container = document.getElementById("article-content");
+    let article = null;
+
+    try {
+      article = JSON.parse(
+        sessionStorage.getItem("rhodvickCurrentArticle") || "null"
+      );
+    } catch (error) {
+      article = null;
+    }
+
+    function addTextElement(parent, tag, text, className) {
+      const element = document.createElement(tag);
+      element.textContent = text || "";
+      if (className) element.className = className;
+      parent.appendChild(element);
+      return element;
+    }
+
+    if (!article || !article.title) {
+      container.replaceChildren();
+
+      const message = document.createElement("div");
+      message.className = "error-message";
+
+      addTextElement(message, "h2", "No article selected");
+      addTextElement(
+        message,
+        "p",
+        "Please return to the news homepage and choose an article to read."
+      );
+
+      const link = document.createElement("a");
+      link.href = "index.html#news";
+      link.textContent = "Browse the latest news →";
+      message.appendChild(link);
+
+      container.appendChild(message);
+    } else {
+      container.replaceChildren();
+
+      addTextElement(
+        container, "div", "Technology News", "article-label"
+      );
+
+      addTextElement(container, "h1", article.title).id = "article-title";
+
+      const metaParts = [];
+      if (article.source) metaParts.push(article.source);
+      if (article.date) metaParts.push(article.date);
+
+      addTextElement(
+        container,
+        "div",
+        metaParts.join(" • "),
+        "article-meta"
+      );
+
+      if (article.image) {
+        try {
+          const imageUrl = new URL(article.image);
+          if (imageUrl.protocol === "https:" ||
+              imageUrl.protocol === "http:") {
+            const img = document.createElement("img");
+            img.id = "article-image";
+            img.src = imageUrl.href;
+            img.alt = article.title;
+            img.style.display = "block";
+            img.addEventListener("error", () => img.remove());
+            container.appendChild(img);
+          }
+        } catch (error) {}
+      }
+
+      const panel = document.createElement("section");
+      panel.className = "article-panel";
+
+      addTextElement(panel, "h2", "The Story");
+
+      addTextElement(
+        panel,
+        "div",
+        article.description || article.summary ||
+          "A short summary is not available for this story.",
+        ""
+      ).id = "article-summary";
+
+      const sourceBox = document.createElement("div");
+      sourceBox.className = "source-box";
+
+      addTextElement(sourceBox, "h3", "Read the original report");
+      addTextElement(
+        sourceBox,
+        "p",
+        "This RHODVICK TECH page presents a news summary. Visit the publisher for the original report and any additional details."
+      );
+
+      try {
+        const sourceUrl = new URL(article.url);
+        if (sourceUrl.protocol === "https:" ||
+            sourceUrl.protocol === "http:") {
+          const sourceLink = document.createElement("a");
+          sourceLink.href = sourceUrl.href;
+          sourceLink.target = "_blank";
+          sourceLink.rel = "noopener noreferrer";
+          sourceLink.textContent = "Continue to the original source →";
+          sourceBox.appendChild(sourceLink);
+        }
+      } catch (error) {
+        addTextElement(sourceBox, "p", "The original link is unavailable.");
+      }
+
+      panel.appendChild(sourceBox);
+      container.appendChild(panel);
+    }
+
+    if (window.feather) {
+      window.feather.replace();
+    }
+  </script>
+</body>
+</html>
